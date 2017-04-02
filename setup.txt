@@ -9,3 +9,63 @@
 - 配列の短縮構文
 $nums = array(1, 2, 3);
 $nums = [1, 2, 3];
+
+#CakePHPセットアップ
+- CakePHPの公式サイトから該当のバージョンをダウンロードする(解凍したフォルダを好きな名前に変えとく)
+- apacheの設定を変える
+sudo vi /etc/httpd/conf/httpd.conf 
+
+~ 省略 ~
+<Directory "/var/www/html">
+
+#
+# Possible values for the Options directive are "None", "All",
+# or any combination of:
+#   Indexes Includes FollowSymLinks SymLinksifOwnerMatch ExecCGI MultiViews
+#
+# Note that "MultiViews" must be named *explicitly* --- "Options All"
+# doesn't give it to you.
+#
+# The Options directive is both complicated and important.  Please see
+# http://httpd.apache.org/docs/2.2/mod/core.html#options
+# for more information.
+#
+    Options Indexes FollowSymLinks
+
+#
+# AllowOverride controls what directives may be placed in .htaccess files.
+# It can be "All", "None", or any combination of the keywords:
+#   Options FileInfo AuthConfig Limit
+#
+
+##### ここから追記 #####
+
+        Options FollowSymlinks
+	AllowOverride All
+
+##### ここまで追記 #####
+
+#
+# Controls who can get stuff from this server.
+#
+	        Order allow,deny
+		Allow from all
+
+</Directory>
+~ 省略 ~
+
+- 設定ファイル修正後↑ 、pache再起動
+sudo service httpd restart
+＊下みたいなかんじでOKとか出たらおっけー
+Stopping httpd:                                            [  OK   ]
+Starting httpd: httpd: Could not reliably determine the server's fully qualified domain name, using localhost.localdomain for ServerName
+                                                           [  OK   ]
+
+- 好きな名前に変えといたフォルダをサーバにアップロード
+- ブラウザで見てみるとエラーがいっぱい出ているので、設定を変える
+→ パーミッションの問題らしい。公式に詳しく載ってるので確認
+https://book.cakephp.org/2.0/ja/installation.html
+→ どうやらapp/tmpにユーザの書き込み権限が必要らしい。
+→ 公式に貼ってあるコマンドを実行してみたけどtmpなんてないと怒られてしまった。とりあえず、早くCakePHPいじりたいしよくわかんないので、サーバにアップロードしたフォルダごと全権限与えてみる
+chmod -R 777 フォルダ名/
+- ブラウザで見てみて、なんかカラフルなページが出てきたら、セキュリティの設定をする
