@@ -69,3 +69,20 @@ https://book.cakephp.org/2.0/ja/installation.html
 → 公式に貼ってあるコマンドを実行してみたけどtmpなんてないと怒られてしまった。とりあえず、早くCakePHPいじりたいしよくわかんないので、サーバにアップロードしたフォルダごと全権限与えてみる
 chmod -R 777 フォルダ名/
 - ブラウザで見てみて、なんかカラフルなページが出てきたら、セキュリティの設定をする
+vi フォルダ名/app/Config/core.php
+乱数部分を変更する
+<?php
+
+// 省略
+
+/**
+ * A random string used in security hashing methods.
+ */
+   Configure::write('Security.salt', 'DYhG93bfds7a8f90ds0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi');
+
+/**
+ * A random numeric string (digits only) used to encrypt/decrypt strings.
+ */
+   Configure::write('Security.cipherSeed', '747382906859309657453542496749683645');
+
+// 省略
