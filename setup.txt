@@ -13,7 +13,7 @@ $nums = [1, 2, 3];
 #CakePHPセットアップ
 - CakePHPの公式サイトから該当のバージョンをダウンロードする(解凍したフォルダを好きな名前に変えとく)
 - apacheの設定を変える
-sudo vi /etc/httpd/conf/httpd.conf 
+sudo vi etc/httpd/conf/httpd.conf 
 
 ~ 省略 ~
 <Directory "/var/www/html">
@@ -69,7 +69,7 @@ https://book.cakephp.org/2.0/ja/installation.html
 → 公式に貼ってあるコマンドを実行してみたけどtmpなんてないと怒られてしまった。とりあえず、早くCakePHPいじりたいしよくわかんないので、サーバにアップロードしたフォルダごと全権限与えてみる
 chmod -R 777 フォルダ名/
 - ブラウザで見てみて、なんかカラフルなページが出てきたら、セキュリティの設定をする
-vi フォルダ名/app/Config/core.php
+vi app/Config/core.php
 乱数部分を変更する
 <?php
 
@@ -88,7 +88,7 @@ vi フォルダ名/app/Config/core.php
 // 省略
 -データベースの設定をする、まずは使うデータベースとテーブル作る
 -データベースへの接続設定をする
-cp フォルダ名/app/Config/database.php.default database.php
+cp app/Config/database.php.default database.php
 -databese.phpの中を編集
 <?php
 
@@ -121,3 +121,67 @@ class DATABASE_CONFIG {
 			);
 
 }
+-デバッグキット使えるようにする
+-ブラウザのDebugKitの記述のところにあるリンクからGitHubにとぶと使い方やインストールの仕方が書いてあるので必要なら参考にする
+-リポジトリの内容をDebugKitというフォルダを作ってその中に入れるためにフォルダ直下で下のコマンド実行する
+git clone --branch 2.2 git://github.com/cakephp/debug_kit.git app/Plugin/DebugKit
+-編集
+vi app/Config/bootstrap.php
+<?php
+
+// 省略
+
+/**
+ * Plugins need to be loaded manually, you can either load them one by one or all of them in a single call
+ * Uncomment one of the lines below, as you need. Make sure you read the documentation on CakePlugin to use more
+ * advanced ways of loading plugins
+ *
+ * CakePlugin::loadAll(); // Loads all plugins at once
+ * CakePlugin::load('DebugKit'); // Loads a single plugin named DebugKit
+ */
+
+CakePlugin::load(array('DebugKit'));
+
+// 省略
+
+-編集
+vi app/Controller/AppController.php
+<?php
+/**
+ * Application level Controller
+ *
+ * This file is application-wide controller file. You can put all
+ * application-wide controller-related methods here.
+ *
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       app.Controller
+ * @since         CakePHP(tm) v 0.2.9
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ */
+
+App::uses('Controller', 'Controller');
+
+/**
+ * Application Controller
+ *
+ * Add your application-wide methods in the class below, your controllers
+ * will inherit them.
+ *
+ * @package     app.Controller
+ * @link        http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
+ */
+class AppController extends Controller {
+
+	public $components = array('DebugKit.Toolbar');
+
+
+}
+-ブラウザの右上に変なバーが出てればOK
